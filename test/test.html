@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>simple-drawer</title>
+    <script src="../../webcomponentsjs/webcomponents.min.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+    <script src="../../test-fixture/test-fixture-mocha.js"></script>
+    <link rel="import" href="../../test-fixture/test-fixture.html">
+
+    <!-- Import the element to test -->
+    <link rel="import" href="../simple-drawer.html">
+
+    <!-- Utility for flushing animations in tests -->
+    <script src="../../web-animations-js/web-animations-next.min.js"></script>
+    <script>
+      window.flushAnimations = function() {
+        document.timeline.getAnimations().forEach(function(animation) {
+          animation.finish();
+        });
+      }
+    </script>
+
+    <!-- Setup fixtures -->
+    <script>
+      (function() {
+        window.fixtures = window.fixtures || {};
+        window.fixtures['simple-drawer'] = {
+        };
+      })();
+    </script>
+
+  </head>
+  <body>
+    <test-fixture id="default">
+      <template>
+        <simple-drawer></simple-drawer>
+      </template>
+    </test-fixture>
+    <script>
+      describe('<simple-drawer>', function() {
+
+        var component,
+            componentFixtures;
+
+        componentFixtures = window.fixtures;
+
+        beforeEach(function() {
+          component = fixture('default');
+        });
+
+        it('is okay', function() {
+          expect(component).to.be.ok;
+        });
+
+        it('should go visible when active true', function() {
+          component.active = false;
+          expect(component.visible).to.be.false;
+
+          component.active = true;
+          window.flushAnimations();
+          expect(component.visible).to.be.true;
+        });
+
+        describe('closing', function() {
+
+          it('should close on escape key', function() {
+            component.active = true;
+            window.flushAnimations();
+
+            setTimeout(function() {
+              component.fire('keyup', { keyCode: 27 }, { node: document.body });
+              expect(component.active).to.be.false;
+            }, 0);
+
+          });
+
+          it('should not close on escape key if noEscape true', function() {
+            component.active = true;
+            component.noEscape = true;
+            window.flushAnimations();
+
+            setTimeout(function() {
+              component.fire('keyup', { keyCode: 27 }, { node: document.body });
+              expect(component.active).to.be.true;
+            }, 0);
+          });
+
+          it('should close on outside click', function() {
+            component.active = true;
+            window.flushAnimations();
+
+            setTimeout(function() {
+              document.body.click();
+              expect(component.active).to.be.false;
+            }, 0);
+          });
+
+          it('should not close on outside click if noOutsideClick true', function() {
+            component.active = true;
+            component.noOutsideClick = true;
+            window.flushAnimations();
+
+            setTimeout(function() {
+              document.body.click();
+              expect(component.active).to.be.true;
+            }, 0);
+          });
+
+        });
+      });
+    </script>
+  </body>
+</html>

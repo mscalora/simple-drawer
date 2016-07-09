@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <title>simple-drawer Demo</title>
+    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
+    <link rel="import" href="../simple-drawer.html">
+    <style>
+      body {
+        text-align: center
+      }
+      simple-drawer {
+        padding: 0 30px;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body unresolved>
+
+    <button id="button">toggle drawer</button>
+
+    <simple-drawer id="drawer">
+      <h1>Drawer</h1>
+    </simple-drawer>
+
+    <script>
+      var button = document.querySelector('#button'),
+          drawer = document.querySelector('#drawer');
+
+      button.addEventListener('click', function() {
+        drawer.open();
+      });
+      button.addEventListener('touchend', function() {
+        drawer.open();
+      });
+    </script>
+
+  </body>
+</html>

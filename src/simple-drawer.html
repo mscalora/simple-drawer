@@ -1,0 +1,303 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<dom-module id="simple-drawer">
+  <template>
+    <style>
+      :host, *, *::before, *::after {
+        box-sizing: border-box;
+        -moz-osx-font-smoothing: grayscale;
+         -webkit-font-smoothing: antialiased;
+                 font-smoothing: antialiased;
+      }
+
+      :host {
+        position: fixed;
+        display: block;
+        top: 0;
+        bottom: 0;
+        background: white;
+        z-index: 99;
+        overflow: visible;
+        box-shadow: 0 0 2px rgba(0,0,0,0.4);
+        display: none;
+      }
+
+      :host([disabled]) {
+        display: block;
+        position: relative;
+        box-shadow: none;
+        transform: none !important;
+      }
+
+      :host([visible]) {
+        display: flex;
+        flex-direction: column;
+      }
+
+      :host([position="left"]) {
+        left: 0;
+        transform: translateX(-100%);
+        align-items: flex-end;
+      }
+
+      :host([position="right"]) {
+        right: 0;
+        transform: translateX(100%);
+        align-items: flex-start;
+      }
+    </style>
+
+    <content></content>
+
+  </template>
+
+  <script src="../web-animations-js/web-animations.min.js"></script>
+  <script>
+    const ANIMATION_OPTS = {
+      easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)',
+      duration: 175
+    };
+
+    class SimpleDrawer {
+      beforeRegister() {
+        this.is = 'simple-drawer',
+
+        this.properties = {
+
+          /**
+           *  Changes to active state trigger opening/closing of drawer
+           *  @type {Boolean}
+           */
+          active: {
+            type: Boolean,
+            value: false,
+            observer: '_activeChanged'
+          },
+
+          /**
+           *  Set by animations, to handle CSS display changes
+           *  @type {Boolean}
+           */
+          visible: {
+            type: Boolean,
+            value: false,
+            reflectToAttribute: true
+          },
+
+          /**
+           * Stop drawer exiting on escape
+           * @type {Boolean}
+           */
+          noEscape: Boolean,
+
+          /**
+           * Stop drawer exiting on outside click
+           * @type {Boolean}
+           */
+          noOutsideClick: Boolean,
+
+          /**
+           *  Whether to position the drawer on the left or right of the viewport
+           *  @type {String} left|right
+           */
+          position: {
+            type: String,
+            value: 'left',
+            reflectToAttribute: true
+          },
+
+          /**
+           * Disable the panel, so can be used in responsive situations
+           * @type {Boolean}
+           */
+          disabled: {
+            type: Boolean,
+            reflectToAttribute: true
+          },
+
+          /**
+           *  True when the panel is fully open
+           *  @type {Boolean}
+           */
+          _opened: Boolean,
+
+          /**
+           * Drawer animation direction
+           * @type {Array}
+           */
+          _animationFrames: {
+            type: Array,
+            computed: '_computeAnimationFrames(position)'
+          }
+
+        };
+      };
+
+      /**
+       * Slide in/out animation frame constructor
+       * @param {String} position Current value of the position property
+       * @return {Array} array of animation frame objects
+       */
+      _computeAnimationFrames(position) {
+        let translate;
+
+        if (!position) {
+          return;
+        }
+
+        position === 'left' ? translate = '-100%' : translate = '100%';
+
+        return [
+          { transform: `translateX(${translate})` },
+          { transform: 'translateX(0)' }
+        ];
+      }
+
+      /**
+       * Active property observer
+       * @param  {Boolean} active current state of the active property
+       * @return {undefined}
+       */
+      _activeChanged(active) {
+        if (this.disabled) {
+          return
+        }
+
+        active ? this._toggleDrawer('in') : this._toggleDrawer('out');
+      }
+
+      /**
+       * Run animations on the drawer to open and close
+       * @param  {String} direction in|out state to move the drawer to
+       * @return {undefined}
+       */
+      _toggleDrawer(direction) {
+        let frames = this._animationFrames,
+            animation;
+
+        if (!frames) {
+          return;
+        }
+
+        if (direction === 'in') {
+
+          this.visible = true;
+          animation = this.animate(frames, ANIMATION_OPTS);
+
+          // Manually fill animation frames, so can be disabled
+          this.style.transform = frames[1].transform;
+
+          animation.onfinish = () => {
+            this._opened = true;
+            this._bodyLocked(true);
+          }
+
+        } else {
+
+          this._opened = false;
+          animation = this.animate(frames.reverse(), ANIMATION_OPTS);
+
+          // Manually fill animation frames, so can be disabled
+          this.style.transform = frames.reverse()[1].transform;
+
+          animation.onfinish = () => {
+            this.visible = false;
+            this._bodyLocked(false);
+          }
+
+        }
+      }
+
+      /**
+       * Attaches an event handler to close the drawer on outside clicks
+       * @return {undefined}
+       */
+      _closeOnOutsideClick() {
+        if (this.noOutsideClick) {
+          return;
+        }
+
+        let handleTap = (e) => {
+          if (!this._opened) {
+            return;
+          }
+
+          if (e.target !== this) {
+            this.close();
+          }
+        };
+
+        // Add escape listeners for clicks and taps
+        document.addEventListener('click', handleTap);
+        document.addEventListener('touchend', handleTap);
+      }
+
+      /**
+       * Close the modal on escape key press
+       * @return {undefined}
+       */
+      _closeOnEscape() {
+        if (this.noEscape) {
+          return;
+        }
+
+        document.addEventListener('keyup', (e) => {
+          if (e.keyCode === 27) {
+            this.close();
+          }
+        });
+      }
+
+      /**
+       * Locks the body with overflow hidden, for when panel is active
+       * @param  {Boolean} locked whether to lock or unlock the body
+       * @return {undefined}
+       */
+      _bodyLocked(locked) {
+        if (locked) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+      }
+
+      /**
+       * Puiblic helper method to toggle the active state
+       * @param {Boolean} event Passthrough clickoutside escaping
+       * @return {undefined}
+       */
+      toggle(event) {
+        if (event) {
+          event._protected = true;
+        }
+        this.active = !this.active;
+      }
+
+      /**
+       * Public helper method to send active true
+       * @return {undefined}
+       */
+      open() {
+        this.active = true;
+      }
+
+      /**
+       * Public helper method to send active false
+       * @return {undefined}
+       */
+      close() {
+        this.active = false;
+      }
+
+      /**
+       * Setup listeners for outside clicks on ready
+       * @return {undefined}
+       */
+      ready() {
+        this._closeOnOutsideClick();
+        this._closeOnEscape();
+      };
+    };
+    Polymer(SimpleDrawer)
+  </script>
+</dom-module>
