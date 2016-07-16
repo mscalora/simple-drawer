@@ -1,7 +1,7 @@
 {
   "name": "simple-drawer",
   "version": "0.1.1",
-  "description": "Simple and easy off-screen drawer panel",
+  "description": "Simple off-screen drawer panel",
   "main": "simple-drawer.html",
   "scripts": {
     "test": "gulp test:local"
