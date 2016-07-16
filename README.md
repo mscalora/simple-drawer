@@ -1,7 +1,8 @@
 # Simple Drawer
-[![Build status][travis-badge]][travis-url] [![Bower dependencies][bowerdeps-badge]][bowerdeps-url] ![Version][bower-badge]
+[![Build status][travis-badge]][travis-url] [![Bower dependencies][bowerdeps-badge]][bowerdeps-url] ![Version][bower-badge] ![Size][size-badge]
+<br/>[![Cross browser test status][browser-badges]][travis-url]
 
-Simple, toggleable off-screen drawer panel
+Simple off-screen drawer panel
 
 ## Installation & usage
 
@@ -59,3 +60,6 @@ MIT © [Simpla](https://www.simpla.io)
 [travis-url]: https://travis-ci.org/SimpleElements/simple-drawer
 [bowerdeps-badge]: https://img.shields.io/gemnasium/SimpleElements/simple-drawer.svg
 [bowerdeps-url]: https://gemnasium.com/bower/simple-drawer
+[size-badge]: https://badges.herokuapp.com/size/github/SimpleElements/simple-drawer/master/simple-drawer.html?gzip=true&color=blue
+[browser-badges]: https://badges.herokuapp.com/travis/SimpleElements/simple-drawer/sauce/SimpleElements?labels=none
+
