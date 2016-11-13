@@ -148,8 +148,8 @@
         position === 'left' ? translate = '-100%' : translate = '100%';
 
         return [
-          { transform: `translateZ(0), translateX(${translate})` },
-          { transform: 'translateZ(0), translateX(0)' }
+          { transform: `translateZ(0) translateX(${translate})` },
+          { transform: 'translateZ(0) translateX(0)' }
         ];
       }
 
