@@ -18,14 +18,10 @@
       </template>
     </test-fixture>
     <script>
-      var ANIMATION_DURATION = 200;
-
       describe('<simple-drawer>', function() {
 
         var component,
-            componentFixtures;
-
-        componentFixtures = window.fixtures;
+            ANIMATION_DURATION = 200;
 
         beforeEach(function() {
           component = fixture('default');
@@ -37,9 +33,9 @@
 
         it('should go visible when active true', function() {
           component.active = true;
-          Polymer.RenderStatus.afterNextRender(component, function() {
+          setTimeout(function() {
             expect(component.visible).to.be.true;
-          });
+          }, 1);
         });
 
         describe('closing', function() {
@@ -61,7 +57,7 @@
             setTimeout(function() {
               component.fire('keydown', { keyCode: 27 }, { node: document.body });
               expect(component.visible).to.be.false;
-            }, 0);
+            }, ANIMATION_DURATION);
           });
 
           it('should not close on escape key if noEscape true', function() {
@@ -71,7 +67,7 @@
             setTimeout(function() {
               component.fire('keydown', { keyCode: 27 }, { node: document.body });
               expect(component.visible).to.be.true;
-            }, 0);
+            }, ANIMATION_DURATION);
           });
 
           it('should close on blur', function() {
@@ -80,7 +76,7 @@
             setTimeout(function() {
               document.body.click();
               expect(component.visible).to.be.false;
-            }, 0);
+            }, ANIMATION_DURATION);
           });
 
           it('should not close on blur if noBlur true', function() {
@@ -90,7 +86,7 @@
             setTimeout(function() {
               document.body.click();
               expect(component.visible).to.be.true;
-            }, 0);
+            }, ANIMATION_DURATION);
           });
 
         });
