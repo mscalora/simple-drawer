@@ -12,13 +12,13 @@ Install simple-drawer with Bower
 $ bower install simple-drawer --save
 ```
 
-Import it into the `<head>` of your page
+Import it into the `<head>` of your document
 
 ```html
 <link rel="import" href="/bower_components/simple-drawer/simple-drawer.html">
 ```
 
-Then use it in your project, and call `open()` on it to show it.
+Then use it in on your page, and call `open()` on it to show it.
 
 ```html
 <simple-drawer id="drawer"></simple-drawer>
@@ -37,8 +37,8 @@ Property         | Type    | Default   | Description
 ---------------- | ------- | --------- | -------------                                                  
 `position`       | String  | `'left'`  | Position of the drawer, can be left or right side of viewport 
 `disabled`       | Boolean | `false`   | Whether drawer is disabled                                    
-`noEscape`       | Boolean | `false`   | Stop drawer exiting on escape                                 
-`noOutsideClick` | Boolean | `false`   | Stop drawer exiting on outside click                          
+`noEscape`       | Boolean | `false`   | Stop drawer exiting on escape key press                                 
+`noBlur` | Boolean | `false`   | Stop the drawer closing if it loses focus                          
 
 ## Methods
 

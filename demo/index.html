@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
     <title>simple-drawer Demo</title>
-     <!-- Import Web Components polyfill -->
-    <script src="../../webcomponentsjs/webcomponents-lite.min.js"></script>
 
     <!-- Use shadow DOM if available -->
     <script>
@@ -38,10 +36,7 @@
           drawer = document.querySelector('#drawer');
 
       button.addEventListener('click', function() {
-        drawer.open();
-      });
-      button.addEventListener('touchend', function() {
-        drawer.open();
+        drawer.toggle()
       });
     </script>
 

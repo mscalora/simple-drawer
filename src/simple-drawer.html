@@ -5,9 +5,6 @@
     <style>
       :host, *, *::before, *::after {
         box-sizing: border-box;
-        -moz-osx-font-smoothing: grayscale;
-         -webkit-font-smoothing: antialiased;
-                 font-smoothing: antialiased;
       }
 
       :host {
@@ -16,10 +13,34 @@
         top: 0;
         bottom: 0;
         background: white;
-        z-index: 99;
-        overflow: visible;
-        box-shadow: 0 0 2px rgba(0,0,0,0.2);
+        outline: none;
+        z-index: 2147483647;
+        box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14),
+                    0 1px 18px 0 rgba(0, 0, 0, 0.12),
+                    0 3px 5px -1px rgba(0, 0, 0, 0.4);
+        -moz-osx-font-smoothing: grayscale;
+         -webkit-font-smoothing: antialiased;
+                 font-smoothing: antialiased;
+        transition: transform 125ms cubic-bezier(0.4, 0.0, 1, 1);
+      }
+
+      :host(:not([active])) {
         display: none;
+      }
+
+      :host([visible]) {
+        transform: translateZ(0) translateX(0) !important;
+        transition: transform 250ms cubic-bezier(0.0, 0.0, 0.2, 1);
+      }
+
+      :host([position="left"]) {
+        left: 0;
+        transform: translateZ(0) translateX(-100%);
+      }
+
+      :host([position="right"]) {
+        right: 0;
+        transform: translateZ(0) translateX(100%);
       }
 
       :host([disabled]) {
@@ -28,36 +49,13 @@
         box-shadow: none;
         transform: none !important;
       }
-
-      :host([visible]) {
-        display: flex;
-        flex-direction: column;
-      }
-
-      :host([position="left"]) {
-        left: 0;
-        transform: translateX(-100%);
-        align-items: flex-end;
-      }
-
-      :host([position="right"]) {
-        right: 0;
-        transform: translateX(100%);
-        align-items: flex-start;
-      }
     </style>
 
     <content></content>
 
   </template>
 
-  <script src="../web-animations-js/web-animations.min.js"></script>
   <script>
-    const ANIMATION_OPTS = {
-      easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)',
-      duration: 175
-    };
-
     class SimpleDrawer {
       beforeRegister() {
         this.is = 'simple-drawer',
@@ -70,8 +68,8 @@
            */
           active: {
             type: Boolean,
-            value: false,
-            observer: '_activeChanged'
+            reflectToAttribute: true,
+            readonly: true
           },
 
           /**
@@ -80,8 +78,8 @@
            */
           visible: {
             type: Boolean,
-            value: false,
-            reflectToAttribute: true
+            reflectToAttribute: true,
+            readonly: true
           },
 
           /**
@@ -94,7 +92,7 @@
            * Stop drawer exiting on outside click
            * @type {Boolean}
            */
-          noOutsideClick: Boolean,
+          noBlur: Boolean,
 
           /**
            *  Whether to position the drawer on the left or right of the viewport
@@ -112,191 +110,95 @@
            */
           disabled: {
             type: Boolean,
-            reflectToAttribute: true
+            reflectToAttribute: true,
+            notify: true
           },
 
-          /**
-           *  True when the panel is fully open
-           *  @type {Boolean}
-           */
-          _opened: Boolean,
-
-          /**
-           * Drawer animation direction
-           * @type {Array}
-           */
-          _animationFrames: {
-            type: Array,
-            computed: '_computeAnimationFrames(position)'
+          tabindex: {
+            type: Number,
+            reflectToAttribute: true,
+            readonly: true,
+            value: 0
           }
 
         };
-      };
 
-      /**
-       * Slide in/out animation frame constructor
-       * @param {String} position Current value of the position property
-       * @return {Array} array of animation frame objects
-       */
-      _computeAnimationFrames(position) {
-        let translate;
-
-        if (!position) {
-          return;
-        }
-
-        position === 'left' ? translate = '-100%' : translate = '100%';
-
-        return [
-          { transform: `translateZ(0) translateX(${translate})` },
-          { transform: 'translateZ(0) translateX(0)' }
+        this.observers = [
+          '_goVisibleOnActive(active)',
+          '_closeOnEscape(active)',
+          '_focusOnActive(active)'
         ];
-      }
 
-      /**
-       * Active property observer
-       * @param  {Boolean} active current state of the active property
-       * @return {undefined}
-       */
-      _activeChanged(active) {
-        if (this.disabled) {
-          return
-        }
-
-        active ? this._toggleDrawer('in') : this._toggleDrawer('out');
-      }
-
-      /**
-       * Run animations on the drawer to open and close
-       * @param  {String} direction in|out state to move the drawer to
-       * @return {undefined}
-       */
-      _toggleDrawer(direction) {
-        let frames = this._animationFrames,
-            animation;
-
-        if (!frames) {
-          return;
-        }
-
-        if (direction === 'in') {
-
-          this.visible = true;
-          animation = this.animate(frames, ANIMATION_OPTS);
-
-          // Manually fill animation frames, so can be disabled
-          this.style.transform = frames[1].transform;
-
-          animation.onfinish = () => {
-            this._opened = true;
-            this._bodyLocked(true);
-          }
-
-        } else {
-
-          this._opened = false;
-          animation = this.animate(frames.reverse(), ANIMATION_OPTS);
-
-          // Manually fill animation frames, so can be disabled
-          this.style.transform = frames.reverse()[1].transform;
-
-          animation.onfinish = () => {
-            this.visible = false;
-            this._bodyLocked(false);
-          }
-
+        this.listeners = {
+          blur: '_closeOnBlur',
+          transitionend: '_goInactiveOnClose'
         }
       }
 
-      /**
-       * Attaches an event handler to close the drawer on outside clicks
-       * @return {undefined}
-       */
-      _closeOnOutsideClick() {
-        if (this.noOutsideClick) {
-          return;
-        }
-
-        let handleTap = (e) => {
-          if (!this._opened) {
-            return;
-          }
-
-          if (e.target !== this) {
-            this.close();
-          }
-        };
-
-        // Add escape listeners for clicks and taps
-        document.addEventListener('click', handleTap);
-        document.addEventListener('touchend', handleTap);
-      }
-
-      /**
-       * Close the modal on escape key press
-       * @return {undefined}
-       */
-      _closeOnEscape() {
-        if (this.noEscape) {
-          return;
-        }
-
-        document.addEventListener('keyup', (e) => {
-          if (e.keyCode === 27) {
-            this.close();
-          }
-        });
-      }
-
-      /**
-       * Locks the body with overflow hidden, for when panel is active
-       * @param  {Boolean} locked whether to lock or unlock the body
-       * @return {undefined}
-       */
-      _bodyLocked(locked) {
-        if (locked) {
-          document.body.style.overflow = 'hidden';
-        } else {
-          document.body.style.overflow = '';
-        }
-      }
-
-      /**
-       * Puiblic helper method to toggle the active state
-       * @param {Boolean} event Passthrough clickoutside escaping
-       * @return {undefined}
-       */
-      toggle(event) {
-        if (event) {
-          event._protected = true;
-        }
-        this.active = !this.active;
-      }
-
-      /**
-       * Public helper method to send active true
-       * @return {undefined}
-       */
       open() {
         this.active = true;
       }
 
-      /**
-       * Public helper method to send active false
-       * @return {undefined}
-       */
       close() {
-        this.active = false;
+        this.visible = false;
       }
 
-      /**
-       * Setup listeners for outside clicks on ready
-       * @return {undefined}
-       */
-      ready() {
-        this._closeOnOutsideClick();
-        this._closeOnEscape();
-      };
+      toggle() {
+        if (this.active) {
+          this.close();
+        } else {
+          this.open();
+        }
+      }
+
+      _goVisibleOnActive(active) {
+        if (active) {
+          Polymer.RenderStatus
+            .afterNextRender(this, () => this.visible = true);
+        }
+      }
+
+      _goInactiveOnClose(e) {
+        if (!this.visible) {
+          this.active = false;
+        }
+      }
+
+      _focusOnActive(active) {
+        if (active) {
+          this.focus();
+        }
+      }
+
+      _closeOnBlur(e) {
+        if (!this.noBlur) {
+          this.close();
+        }
+      }
+
+      _closeOnEscape(active) {
+        let closeIfEscape = (e) => {
+          if (e.keyCode === 27 && !this.noEscape) {
+            this.active = false;
+          }
+        };
+
+        if (active) {
+          document.addEventListener('keydown', closeIfEscape);
+        } else {
+          document.removeEventListener('keydown', closeIfEscape);
+        }
+      }
+
+      _lockBodyWhenOpen(active) {
+        let bodyStyle = document.body.style;
+
+        if (active) {
+          bodyStyle.overflow = 'hidden';
+        } else {
+          bodyStyle.overflow = '';
+        }
+      }
     };
     Polymer(SimpleDrawer)
   </script>
