@@ -63,7 +63,7 @@
         this.properties = {
 
           /**
-           *  Changes to active state trigger opening/closing of drawer
+           *  Whether drawer is active
            *  @type {Boolean}
            */
           active: {
@@ -73,7 +73,8 @@
           },
 
           /**
-           *  Set by animations, to handle CSS display changes
+           *  Wether drawer is visisble
+           *  Used by CSS transitions
            *  @type {Boolean}
            */
           visible: {
@@ -83,19 +84,19 @@
           },
 
           /**
-           * Stop drawer exiting on escape
+           * Stop drawer closing on escape keypress
            * @type {Boolean}
            */
           noEscape: Boolean,
 
           /**
-           * Stop drawer exiting on outside click
+           * Stop drawer closing when it loses focus
            * @type {Boolean}
            */
           noBlur: Boolean,
 
           /**
-           *  Whether to position the drawer on the left or right of the viewport
+           *  Position of the drawer
            *  @type {String} left|right
            */
           position: {
@@ -105,7 +106,7 @@
           },
 
           /**
-           * Disable the panel, so can be used in responsive situations
+           * Disable the drawer (so it acts like a div)
            * @type {Boolean}
            */
           disabled: {
@@ -114,6 +115,10 @@
             notify: true
           },
 
+          /**
+           * Make the drawer focuseable
+           * @type {Number}
+           */
           tabindex: {
             type: Number,
             reflectToAttribute: true,
@@ -135,14 +140,26 @@
         }
       }
 
+      /**
+       * Open the drawer
+       * @return {undefined}
+       */
       open() {
         this.active = true;
       }
 
+      /**
+       * Close the drawer
+       * @return {undefined}
+       */
       close() {
         this.visible = false;
       }
 
+      /**
+       * Toggle the drawer
+       * @return {undefined}
+       */
       toggle() {
         if (this.active) {
           this.close();
@@ -151,6 +168,12 @@
         }
       }
 
+      /**
+       * Sets visible on active, after next animation frame
+       * For CSS transitions
+       * @param  {Boolean} active Value of the active property
+       * @return {undefined}
+       */
       _goVisibleOnActive(active) {
         if (active) {
           Polymer.RenderStatus
@@ -158,24 +181,45 @@
         }
       }
 
+      /**
+       * Sets active false if visisble false after
+       * Called on transition ends
+       * @param  {Event} e Transitionend event
+       * @return {undefined}
+       */
       _goInactiveOnClose(e) {
         if (!this.visible) {
           this.active = false;
         }
       }
 
+      /**
+       * Autofocus the drawer when it opens
+       * @param  {Boolean} active Value of the active prop
+       * @return {undefined}
+       */
       _focusOnActive(active) {
         if (active) {
           this.focus();
         }
       }
 
+      /**
+       * Close the drawer when it loses focus
+       * @param  {Event} e Blur event
+       * @return {undefined}
+       */
       _closeOnBlur(e) {
         if (!this.noBlur) {
           this.close();
         }
       }
 
+      /**
+       * Close the drawer on escape keypress if active
+       * @param  {Boolean} active Value of the active property
+       * @return {undefined}
+       */
       _closeOnEscape(active) {
         let closeIfEscape = (e) => {
           if (e.keyCode === 27 && !this.noEscape) {
@@ -190,6 +234,11 @@
         }
       }
 
+      /**
+       * Lock the document body when drawer is open
+       * @param  {Boolean} active Value of the active property
+       * @return {undefined}
+       */
       _lockBodyWhenOpen(active) {
         let bodyStyle = document.body.style;
 
