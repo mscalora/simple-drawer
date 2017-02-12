@@ -1,6 +1,6 @@
 {
   "name": "simple-drawer",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Simple off-screen drawer panel",
   "main": "simple-drawer.html",
   "scripts": {
