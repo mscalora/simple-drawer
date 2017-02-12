@@ -11,6 +11,7 @@ Simple , lightweight, style-agnostic off-screen drawer panel
     <link rel="import" href="simple-drawer.html">
     <style>
       body {
+        min-height: 300px
         text-align: center
       }
       simple-drawer {
