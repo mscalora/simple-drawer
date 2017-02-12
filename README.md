@@ -1,7 +1,7 @@
 # Simple Drawer
 [![Build status][travis-badge]][travis-url] [![Bower dependencies][bowerdeps-badge]][bowerdeps-url] ![Version][bower-badge] ![Size][size-badge] [![Published][webcomponents-badge]][webcomponents-url]
 
-Simple , lightweight, style-agnostic off-screen drawer panel
+Simple drawer is a lightweight, style-agnostic off-screen drawer panel
 
 <!---
 ```
