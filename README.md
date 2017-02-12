@@ -1,7 +1,46 @@
 # Simple Drawer
-[![Build status][travis-badge]][travis-url] [![Bower dependencies][bowerdeps-badge]][bowerdeps-url] ![Version][bower-badge] ![Size][size-badge]
+[![Build status][travis-badge]][travis-url] [![Bower dependencies][bowerdeps-badge]][bowerdeps-url] ![Version][bower-badge] ![Size][size-badge] [![Published][webcomponents-badge]][webcomponents-url]
 
-Simple off-screen drawer panel
+Simple , lightweight, style-agnostic off-screen drawer panel
+
+<!---
+```
+<custom-element-demo>
+  <template>
+    <script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../iron-icons/iron-icons.html">
+    <link rel="import" href="simple-button.html">
+    <style>
+      body {
+        text-align: center
+        min-height: 300px;
+      }
+      simple-drawer {
+        padding: 0 30px;
+        font-family: sans-serif;
+      }
+    </style>
+    <next-code-block></next-code-block>
+  </template>
+</custom-element-demo>
+```
+-->
+```html
+<button id="button">open drawer</button>
+
+<simple-drawer id="drawer">
+  <h1>Drawer</h1>
+</simple-drawer>
+
+<script>
+  var button = document.querySelector('#button'),
+      drawer = document.querySelector('#drawer');
+
+  button.addEventListener('click', function(e) {
+    drawer.active = true;
+  });
+</script>
+```
 
 ## Installation & usage
 
@@ -29,7 +68,7 @@ Then use it in on your page, and toggle the `active` property to open/close it.
 ```
 
 
-### Polyfills for cross-browser support
+#### Polyfills for cross-browser support
 Simple drawer relies on emerging standards, for full cross-browser support include the [Web Components Lite][webcomponents] polyfill.
 
 ```sh
@@ -73,4 +112,6 @@ MIT © [Simpla](https://www.simpla.io)
 [bowerdeps-badge]: https://img.shields.io/gemnasium/SimpleElements/simple-drawer.svg
 [bowerdeps-url]: https://gemnasium.com/bower/simple-drawer
 [size-badge]: https://badges.herokuapp.com/size/github/SimpleElements/simple-drawer/master/simple-drawer.html?gzip=true&color=blue
+[webcomponents-badge]: https://img.shields.io/badge/webcomponents.org-published-blue.svg
+[webcomponents-url]: https://www.webcomponents.org/element/SimpleElements/simple-drawer
 
