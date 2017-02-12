@@ -24,7 +24,7 @@
         transition: transform 125ms cubic-bezier(0.4, 0.0, 1, 1);
       }
 
-      :host(:not([active])) {
+      :host([hidden]) {
         display: none;
       }
 
@@ -63,13 +63,13 @@
         this.properties = {
 
           /**
-           *  Whether drawer is active
+           *  State of the drawer
            *  @type {Boolean}
            */
           active: {
             type: Boolean,
-            reflectToAttribute: true,
-            readonly: true
+            value: false,
+            notify: true
           },
 
           /**
@@ -80,6 +80,19 @@
           visible: {
             type: Boolean,
             reflectToAttribute: true,
+            value: false,
+            readonly: true
+          },
+
+           /**
+           *  Wether drawer is hidden
+           *  Used by CSS transitions
+           *  @type {Boolean}
+           */
+          hidden: {
+            type: Boolean,
+            reflectToAttribute: true,
+            value: true,
             readonly: true
           },
 
@@ -129,55 +142,30 @@
         };
 
         this.observers = [
-          '_goVisibleOnActive(active)',
+          '_toggleVisibility(active)',
           '_closeOnEscape(active)',
           '_focusOnActive(active)'
         ];
 
         this.listeners = {
           blur: '_closeOnBlur',
-          transitionend: '_goInactiveOnClose'
+          transitionend: '_hideIfInactive'
         }
       }
 
-      /**
-       * Open the drawer
-       * @return {undefined}
-       */
-      open() {
-        this.active = true;
-      }
 
       /**
-       * Close the drawer
-       * @return {undefined}
-       */
-      close() {
-        this.visible = false;
-      }
-
-      /**
-       * Toggle the drawer
-       * @return {undefined}
-       */
-      toggle() {
-        if (this.active) {
-          this.close();
-        } else {
-          this.open();
-        }
-      }
-
-      /**
-       * Sets visible on active, after next animation frame
-       * For CSS transitions
+       * Toggles visibility of drawer based on active state
        * @param  {Boolean} active Value of the active property
        * @return {undefined}
        */
-      _goVisibleOnActive(active) {
+      _toggleVisibility(active) {
         if (active) {
+          this.hidden = false;
           Polymer.RenderStatus
             .afterNextRender(this, () => this.visible = true);
+        } else {
+          this.visible = false;
         }
       }
 
@@ -187,9 +175,9 @@
        * @param  {Event} e Transitionend event
        * @return {undefined}
        */
-      _goInactiveOnClose(e) {
-        if (!this.visible) {
-          this.active = false;
+      _hideIfInactive(e) {
+        if (!this.active) {
+          this.hidden = true;
         }
       }
 
@@ -211,7 +199,7 @@
        */
       _closeOnBlur(e) {
         if (!this.noBlur) {
-          this.close();
+          this.active = false;
         }
       }
 

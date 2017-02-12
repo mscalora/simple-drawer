@@ -17,23 +17,34 @@ Import it into the `<head>` of your document
 <link rel="import" href="/bower_components/simple-drawer/simple-drawer.html">
 ```
 
-Then use it in on your page, and call `open()` on it to show it.
+Then use it in on your page, and toggle the `active` property to open/close it.
 
 ```html
 <simple-drawer id="drawer"></simple-drawer>
 
 <script>
   // Open drawer
-  document.querySelector('#drawer').open();
+  document.querySelector('#drawer').active = true;
 </script>
 ```
 
-Note for cross-browser support you should also include the [Web Components Polyfill][webcomponents].
+
+### Polyfills for cross-browser support
+Simple drawer relies on emerging standards, for full cross-browser support include the [Web Components Lite][webcomponents] polyfill.
+
+```sh
+bower i webcomponentsjs --save
+```
+
+```html
+<script src="/bower_components/webcomponentsjs/web-components-lite.js"></script>
+```
 
 ## Properties
 
 Property         | Type    | Default   | Description                                                   
 ---------------- | ------- | --------- | -------------                                                  
+`active`         | Boolean | `false`   | Whether the drawer is opened or closed
 `position`       | String  | `'left'`  | Position of the drawer, can be left or right side of viewport 
 `disabled`       | Boolean | `false`   | Whether drawer is disabled                                    
 `noEscape`       | Boolean | `false`   | Stop drawer exiting on escape key press                                 
@@ -48,14 +59,6 @@ Properties can either be set as attributes on the element, or imperitively with 
   document.querySelector('simple-drawer').position = 'left';
 </script>                        
 ```
-
-## Methods
-
-Method     | Description       
----------- | -----------       
-`open()`   | Open the drawer   
-`close()`  | Close the drawer  
-`toggle()` | Toggle the drawer 
 
 --
 

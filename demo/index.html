@@ -27,7 +27,7 @@
   </head>
   <body unresolved>
 
-    <button id="button">toggle drawer</button>
+    <button id="button">open drawer</button>
 
     <simple-drawer id="drawer">
       <h1>Drawer</h1>
@@ -37,8 +37,8 @@
       var button = document.querySelector('#button'),
           drawer = document.querySelector('#drawer');
 
-      button.addEventListener('click', function() {
-        drawer.toggle()
+      button.addEventListener('click', function(e) {
+        drawer.active = true;
       });
     </script>
 
