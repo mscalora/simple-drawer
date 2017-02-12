@@ -12,7 +12,6 @@ Simple , lightweight, style-agnostic off-screen drawer panel
     <style>
       body {
         text-align: center
-        min-height: 300px;
       }
       simple-drawer {
         padding: 0 30px;
@@ -28,7 +27,7 @@ Simple , lightweight, style-agnostic off-screen drawer panel
 <button id="button">open drawer</button>
 
 <simple-drawer id="drawer">
-  <h1>Drawer</h1>
+  <span>Drawer</span>
 </simple-drawer>
 
 <script>
@@ -46,7 +45,7 @@ Simple , lightweight, style-agnostic off-screen drawer panel
 Install simple-drawer with Bower
 
 ```sh
-$ bower install simple-drawer --save
+$ bower i simple-drawer --save
 ```
 
 Import it into the `<head>` of your document
