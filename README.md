@@ -8,8 +8,7 @@ Simple , lightweight, style-agnostic off-screen drawer panel
 <custom-element-demo>
   <template>
     <script src="../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="../iron-icons/iron-icons.html">
-    <link rel="import" href="simple-button.html">
+    <link rel="import" href="simple-drawer.html">
     <style>
       body {
         text-align: center
