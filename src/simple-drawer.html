@@ -47,6 +47,7 @@
         display: block;
         position: relative;
         box-shadow: none;
+        height: 100%;
         transform: none !important;
       }
     </style>
@@ -144,7 +145,9 @@
         this.observers = [
           '_toggleVisibility(active)',
           '_closeOnEscape(active)',
-          '_focusOnActive(active)'
+          '_focusOnActive(active)',
+          '_lockBodyWhenOpen(active)',
+          '_resetVisibility(disabled)'
         ];
 
         this.listeners = {
@@ -160,12 +163,29 @@
        * @return {undefined}
        */
       _toggleVisibility(active) {
+        if (this.disabled) {
+          return;
+        }
+
         if (active) {
           this.hidden = false;
           Polymer.RenderStatus
             .afterNextRender(this, () => this.visible = true);
         } else {
           this.visible = false;
+        }
+      }
+
+      /**
+       * Ensure drawer is visible when disabled
+       * @param  {Boolean} disabled Value of the disabled prop
+       * @return {undefined}
+       */
+      _resetVisibility(disabled) {
+        if (disabled) {
+          this.active = true;
+          this.hidden = false;
+          this.visible = true;
         }
       }
 
@@ -198,7 +218,7 @@
        * @return {undefined}
        */
       _closeOnBlur(e) {
-        if (!this.noBlur) {
+        if (!this.noBlur && !this.disabled) {
           this.active = false;
         }
       }
@@ -210,7 +230,7 @@
        */
       _closeOnEscape(active) {
         let closeIfEscape = (e) => {
-          if (e.keyCode === 27 && !this.noEscape) {
+          if (e.keyCode === 27 && !this.noEscape && !this.disabled) {
             this.active = false;
           }
         };
@@ -228,13 +248,7 @@
        * @return {undefined}
        */
       _lockBodyWhenOpen(active) {
-        let bodyStyle = document.body.style;
-
-        if (active) {
-          bodyStyle.overflow = 'hidden';
-        } else {
-          bodyStyle.overflow = '';
-        }
+        document.body.style.overflow = active && !this.disabled ? 'hidden' : '';
       }
     };
     Polymer(SimpleDrawer)
