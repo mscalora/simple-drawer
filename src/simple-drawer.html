@@ -147,7 +147,7 @@
           '_closeOnEscape(active)',
           '_focusOnActive(active)',
           '_lockBodyWhenOpen(active)',
-          '_resetVisibility(disabled)'
+          '_resetActive(disabled)'
         ];
 
         this.listeners = {
@@ -163,10 +163,6 @@
        * @return {undefined}
        */
       _toggleVisibility(active) {
-        if (this.disabled) {
-          return;
-        }
-
         if (active) {
           this.hidden = false;
           Polymer.RenderStatus
@@ -177,18 +173,12 @@
       }
 
       /**
-       * Ensure drawer is visible when disabled
+       * Ensure drawer is active when disabled
        * @param  {Boolean} disabled Value of the disabled prop
        * @return {undefined}
        */
-      _resetVisibility(disabled) {
-        if (disabled) {
-          this.active = true;
-          this.hidden = false;
-          this.visible = true;
-        } else {
-          this.active = false;
-        }
+      _resetActive(disabled) {
+        this.active = disabled;
       }
 
       /**
@@ -232,10 +222,14 @@
        */
       _closeOnEscape(active) {
         let closeIfEscape = (e) => {
-          if (e.keyCode === 27 && !this.noEscape && !this.disabled) {
+          if (e.keyCode === 27 && !this.noEscape) {
             this.active = false;
           }
         };
+
+        if (this.disabled) {
+          return;
+        }
 
         if (active) {
           document.addEventListener('keydown', closeIfEscape);
