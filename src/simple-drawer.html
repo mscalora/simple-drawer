@@ -82,8 +82,7 @@
           visible: {
             type: Boolean,
             reflectToAttribute: true,
-            value: false,
-            readonly: true
+            value: false
           },
 
            /**
@@ -94,21 +93,35 @@
           hidden: {
             type: Boolean,
             reflectToAttribute: true,
-            value: true,
-            readonly: true
+            value: true
           },
 
           /**
            * Stop drawer closing on escape keypress
            * @type {Boolean}
            */
-          noEscape: Boolean,
+          noEscape: {
+            type: Boolean,
+            value: false
+          },
 
           /**
            * Stop drawer closing when it loses focus
            * @type {Boolean}
            */
-          noBlur: Boolean,
+          noBlur: {
+            type: Boolean,
+            value: false
+          },
+
+          /**
+           * Stop the drawer closing when children get focus
+           * @type {Boolean}
+           */
+          noChildClicks: {
+            type: Boolean,
+            value: false
+          },
 
           /**
            *  Position of the drawer
@@ -211,7 +224,15 @@
        * @return {undefined}
        */
       _closeOnBlur(e) {
-        if (!this.noBlur && !this.disabled) {
+        let fromChild = e.relatedTarget && this.contains(e.relatedTarget);
+
+        if (this.noBlur || this.disabled) {
+          return
+        }
+
+        if (this.noChildClicks && fromChild) {
+          this.focus();
+        } else {
           this.active = false;
         }
       }
