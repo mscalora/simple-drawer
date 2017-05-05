@@ -26,14 +26,6 @@ Simple-drawer is a performant, lightweight, style-agnostic off-screen drawer pan
         border-bottom: 1px solid lightGrey;
         padding-bottom: 10px;
       }
-
-      simple-drawer a {
-        display: inline-block;
-        text-decoration: none;
-        text-align: left;
-        margin: 10px 0;
-        color: deepskyblue;
-      }
     </style>
     <next-code-block></next-code-block>
   </template>
@@ -41,16 +33,15 @@ Simple-drawer is a performant, lightweight, style-agnostic off-screen drawer pan
 ```
 -->
 ```html
-<button id="button">Open drawer</button>
-
-<simple-drawer id="drawer">
+<simple-drawer>
   <h1>My Drawer</h1>
-  <a href="#">Menu item</a>
 </simple-drawer>
 
+<button>Open drawer</button>
+
 <script>
-  var button = document.querySelector('#button'),
-      drawer = document.querySelector('#drawer');
+  var button = document.querySelector('button'),
+      drawer = document.querySelector('simple-drawer');
 
   button.addEventListener('click', function(e) {
     drawer.active = true;
@@ -104,7 +95,7 @@ Property         | Type    | Default   | Description
 `noBlur`         | Boolean | `false`   | Stop the drawer closing if it loses focus
 `noChildClicks`  | Boolean | `false`   | Stop the drawer closing when children get focus (eg: clicking links)
 
-Properties can be set as attributes on the element or with Javascript, camelCased properties are serialized to kebab-cased attributes
+Properties can be set as attributes on the element or with Javascript. `camelCased` properties are serialized to `kebab-cased` attributes
 
 ```html
 <simple-drawer position="left" no-escape></simple-drawer>
