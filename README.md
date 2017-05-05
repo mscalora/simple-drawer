@@ -1,5 +1,5 @@
 # Simple Drawer
-[![Build status][travis-badge]][travis-url] ![Version][bower-badge] ![Size][size-badge] [![Published][webcomponents-badge]][webcomponents-url]
+![Version][bower-badge] [![Build status][travis-badge]][travis-url] ![Size][size-badge] [![Published][webcomponents-badge]][webcomponents-url]
 
 Simple-drawer is a performant, lightweight, style-agnostic off-screen drawer panel element
 
