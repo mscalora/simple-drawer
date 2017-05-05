@@ -13,17 +13,21 @@
   ],
   "main": "simple-drawer.html",
   "license": "MIT",
-  "homepage": "https://github.com/SimpleElements/simple-drawer/",
+  "homepage": "https://webcomponents.org/element/SimpleElements/simple-drawer",
+  "demos": {
+    "Demo": "demo/index.html"
+  },
   "ignore": [
     "*",
+    "!src",
     "!*.html",
     "!LICENSE"
   ],
   "dependencies": {
-    "polymer": "^1.6.0"
+    "polymer": "^1.8.0"
   },
   "devDependencies": {
     "web-component-tester": "^5.0.0",
-    "webcomponentsjs": "^0.7.24"
+    "iron-demo-helpers": "^1.2.6"
   }
 }

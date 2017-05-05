@@ -3,44 +3,177 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
-    <title>simple-drawer Demo</title>
+    <title>simpla-link Demo</title>
 
-    <script src="../webcomponentsjs/webcomponents.min.js"></script>
-
-    <!-- Use shadow DOM if available -->
+    <!-- Setup demo page -->
+    <script src="https://unpkg.com/webcomponents.js@^0.7.24/webcomponents-lite.min.js"></script>
     <script>
       window.Polymer = { dom: 'shadow' };
     </script>
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
 
-    <!-- Import element -->
+    <!-- Import component -->
     <link rel="import" href="../simple-drawer.html">
 
-    <style>
+    <!-- Demo styles -->
+    <style is="custom-style">
+      /**
+       * Page styles
+       */
       body {
-        text-align: center
-      }
-      simple-drawer {
-        padding: 0 30px;
         font-family: sans-serif;
+        color: #303c46
+      }
+
+      .wrapper {
+        width: 90%;
+        max-width: 38rem;
+        margin: 2rem auto;
+      }
+
+      .demo {
+        display: inline-block;
+        width: 100%;
+        margin: 2rem auto;
+      }
+
+      .demo__title {
+        font-size: 1.4rem;
+        font-weight: 400;
+      }
+
+      simple-drawer {
+        padding: 20px 45px;
+      }
+
+      simple-drawer h1 {
+        font-size: 24px;
+        font-weight: 400;
+        border-bottom: 1px solid lightGrey;
+        padding-bottom: 10px;
+      }
+
+      simple-drawer a {
+        display: inline-block;
+        text-decoration: none;
+        text-align: left;
+        margin: 10px 0;
+        color: deepskyblue;
       }
     </style>
   </head>
-  <body unresolved>
 
-    <button id="button">open drawer</button>
+  <body>
+    <div class="wrapper">
 
-    <simple-drawer id="drawer">
-      <h1>Drawer</h1>
-    </simple-drawer>
+      <script>
+        function openDrawerOnButtonClick() {
+          var template = document.currentScript.parentNode,
+              button = template.querySelector('button'),
+              drawer = template.querySelector('simple-drawer');
 
-    <script>
-      var button = document.querySelector('#button'),
-          drawer = document.querySelector('#drawer');
+          button.addEventListener('click', function() {
+            drawer.active = true;
+          });
+        }
+      </script>
 
-      button.addEventListener('click', function(e) {
-        drawer.active = true;
-      });
-    </script>
+      <div class="demo">
+        <h1 class="demo__title">Basic demo</h1>
+        <demo-snippet>
+          <template>
+            <simple-drawer>
+              <h1>My Drawer</h1>
+              <a href="#">Menu item</a>
+            </simple-drawer>
 
+            <button>Open drawer</button>
+
+            <script>
+              // Opens current demo drawer, see demo/index.html
+              openDrawerOnButtonClick();
+            </script>
+          </template>
+        </demo-snippet>
+      </div>
+
+      <div class="demo">
+        <h1 class="demo__title">Right positioned</h1>
+        <demo-snippet>
+          <template>
+            <simple-drawer position="right">
+              <h1>My Drawer</h1>
+              <a href="#">Menu item</a>
+            </simple-drawer>
+
+            <button>Open drawer</button>
+
+            <script>
+              // Opens current demo drawer, see demo/index.html
+              openDrawerOnButtonClick();
+            </script>
+          </template>
+        </demo-snippet>
+      </div>
+
+      <div class="demo">
+        <h1 class="demo__title">Protect child clicks</h1>
+        <demo-snippet>
+          <template>
+            <simple-drawer no-child-clicks>
+              <h1>My Drawer</h1>
+              <a href="#">Menu item</a>
+            </simple-drawer>
+
+            <button>Open drawer</button>
+
+            <script>
+              // Opens current demo drawer, see demo/index.html
+              openDrawerOnButtonClick();
+            </script>
+          </template>
+        </demo-snippet>
+      </div>
+
+      <div class="demo">
+        <h1 class="demo__title">Disable closing on blur</h1>
+        <demo-snippet>
+          <template>
+            <simple-drawer no-blur>
+              <h1>My Drawer</h1>
+              <a href="#">Menu item</a>
+            </simple-drawer>
+
+            <button>Open drawer</button>
+
+            <script>
+              // Opens current demo drawer, see demo/index.html
+              openDrawerOnButtonClick();
+            </script>
+          </template>
+        </demo-snippet>
+      </div>
+
+
+      <div class="demo">
+        <h1 class="demo__title">Disable closing on escape key</h1>
+        <demo-snippet>
+          <template>
+            <simple-drawer no-escape>
+              <h1>My Drawer</h1>
+              <a href="#">Menu item</a>
+            </simple-drawer>
+
+            <button>Open drawer</button>
+
+            <script>
+              // Opens current demo drawer, see demo/index.html
+              openDrawerOnButtonClick();
+            </script>
+          </template>
+        </demo-snippet>
+      </div>
+
+    </div>
   </body>
 </html>

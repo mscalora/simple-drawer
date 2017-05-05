@@ -36,8 +36,9 @@ const bs = browserSync.create(),
         rollup: {
           plugins: [
             resolve({ main: true }),
-            commonJs(),
-            babel()
+            babel({
+              exclude: 'node_modules/**/*'
+            })
           ],
           format: 'iife'
         },
@@ -103,11 +104,11 @@ gulp.task('build', () => {
 
 wct.gulp.init(gulp);
 
-gulp.task('serve', (callback) => bs.init(OPTIONS.browserSync));
+gulp.task('demo', (callback) => bs.init(OPTIONS.browserSync));
 gulp.task('refresh', () => bs.reload());
 
 gulp.task('test', ['build', 'test:local']);
 
 gulp.task('watch', () => gulp.watch(['src/**/*'], () => gulprun('build', 'refresh')));
 
-gulp.task('default', ['build', 'serve', 'watch']);
+gulp.task('default', ['build', 'demo', 'watch']);

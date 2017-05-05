@@ -1,7 +1,7 @@
 # Simple Drawer
-[![Build status][travis-badge]][travis-url] [![Bower dependencies][bowerdeps-badge]][bowerdeps-url] ![Version][bower-badge] ![Size][size-badge] [![Published][webcomponents-badge]][webcomponents-url]
+[![Build status][travis-badge]][travis-url] ![Version][bower-badge] ![Size][size-badge] [![Published][webcomponents-badge]][webcomponents-url]
 
-Simple drawer is a lightweight, style-agnostic off-screen drawer panel
+Simple-drawer is a performant, lightweight, style-agnostic off-screen drawer panel element
 
 <!---
 ```
@@ -11,12 +11,28 @@ Simple drawer is a lightweight, style-agnostic off-screen drawer panel
     <link rel="import" href="simple-drawer.html">
     <style>
       body {
-        min-height: 300px
-        text-align: center
-      }
-      simple-drawer {
-        padding: 0 30px;
         font-family: sans-serif;
+        color: #303c46
+      }
+
+      simple-drawer {
+        padding: 20px 45px;
+        font-family: sans-serif;
+      }
+
+      simple-drawer h1 {
+        font-size: 24px;
+        font-weight: 400;
+        border-bottom: 1px solid lightGrey;
+        padding-bottom: 10px;
+      }
+
+      simple-drawer a {
+        display: inline-block;
+        text-decoration: none;
+        text-align: left;
+        margin: 10px 0;
+        color: deepskyblue;
       }
     </style>
     <next-code-block></next-code-block>
@@ -25,10 +41,11 @@ Simple drawer is a lightweight, style-agnostic off-screen drawer panel
 ```
 -->
 ```html
-<button id="button">open drawer</button>
+<button id="button">Open drawer</button>
 
 <simple-drawer id="drawer">
-  <span>Drawer</span>
+  <h1>My Drawer</h1>
+  <a href="#">Menu item</a>
 </simple-drawer>
 
 <script>
@@ -43,10 +60,10 @@ Simple drawer is a lightweight, style-agnostic off-screen drawer panel
 
 ## Installation & usage
 
-Install simple-drawer with Bower
+Install simple-drawer with Bower (Yarn support coming soon)
 
 ```sh
-$ bower i simple-drawer --save
+$ bower install simple-drawer --save
 ```
 
 Import it into the `<head>` of your document
@@ -58,24 +75,22 @@ Import it into the `<head>` of your document
 Then use it in on your page, and toggle the `active` property to open/close it.
 
 ```html
-<simple-drawer id="drawer"></simple-drawer>
+<simple-drawer id="drawer">
+  <!-- Drawer contents -->
+</simple-drawer>
 
 <script>
-  // Open drawer
-  document.querySelector('#drawer').active = true;
+  document.querySelector('simple-drawer').active = true;
 </script>
 ```
 
 
-#### Polyfills for cross-browser support
+#### Cross-browser support
+
 Simple drawer relies on emerging standards, for full cross-browser support include the [Web Components Lite][webcomponents] polyfill.
 
-```sh
-bower i webcomponentsjs --save
-```
-
 ```html
-<script src="/bower_components/webcomponentsjs/web-components-lite.js"></script>
+<script src="https://unpkg.com/webcomponents.js@^0.7.24/webcomponents-lite.min.js"></script>
 ```
 
 ## Properties
@@ -86,19 +101,20 @@ Property         | Type    | Default   | Description
 `position`       | String  | `'left'`  | Position of the drawer, can be left or right side of viewport 
 `disabled`       | Boolean | `false`   | Whether drawer is disabled                                    
 `noEscape`       | Boolean | `false`   | Stop drawer exiting on escape key press                                 
-`noBlur` | Boolean | `false`   | Stop the drawer closing if it loses focus
+`noBlur`         | Boolean | `false`   | Stop the drawer closing if it loses focus
+`noChildClicks`  | Boolean | `false`   | Stop the drawer closing when children get focus (eg: clicking links)
 
-Properties can either be set as attributes on the element, or imperitively with Javascript
+Properties can be set as attributes on the element or with Javascript, camelCased properties are serialized to kebab-cased attributes
 
 ```html
 <simple-drawer position="left" no-escape></simple-drawer>
 
 <script>
-  document.querySelector('simple-drawer').position = 'left';
+  document.querySelector('simple-drawer').active = true;
 </script>                        
 ```
 
---
+***
 
 MIT © [Simpla](https://www.simpla.io) 
 
@@ -108,9 +124,7 @@ MIT © [Simpla](https://www.simpla.io)
 [bowerlicense-badge]: https://img.shields.io/bower/l/simple-drawer.svg
 [travis-badge]: https://img.shields.io/travis/SimpleElements/simple-drawer.svg
 [travis-url]: https://travis-ci.org/SimpleElements/simple-drawer
-[bowerdeps-badge]: https://img.shields.io/gemnasium/SimpleElements/simple-drawer.svg
-[bowerdeps-url]: https://gemnasium.com/bower/simple-drawer
-[size-badge]: https://badges.herokuapp.com/size/github/SimpleElements/simple-drawer/master/simple-drawer.html?gzip=true&color=blue
+[size-badge]: https://badges.herokuapp.com/size/github/SimpleElements/simple-drawer/master/simple-drawer.html?gzip=true
 [webcomponents-badge]: https://img.shields.io/badge/webcomponents.org-published-blue.svg
 [webcomponents-url]: https://www.webcomponents.org/element/SimpleElements/simple-drawer
 
