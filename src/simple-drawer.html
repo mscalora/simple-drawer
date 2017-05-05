@@ -227,11 +227,11 @@
         let { noBlur, disabled, visible, noChildClicks } = this,
             fromChild = e.relatedTarget && this.contains(e.relatedTarget);
 
-        if (noBlur || disabled || !visible) {
+        if (noBlur || disabled) {
           return
         }
 
-        if (noChildClicks && fromChild) {
+        if (!visible || noChildClicks && fromChild) {
           this.focus();
         } else {
           this.active = false;
