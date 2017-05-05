@@ -22,6 +22,8 @@
          -webkit-font-smoothing: antialiased;
                  font-smoothing: antialiased;
         transition: transform 125ms cubic-bezier(0.4, 0.0, 1, 1);
+        /* Protect against body lock */
+        pointer-events: auto;
       }
 
       :host([hidden]) {
@@ -267,7 +269,14 @@
        * @return {undefined}
        */
       _lockBodyWhenOpen(active) {
-        document.body.style.overflow = active && !this.disabled ? 'hidden' : '';
+        const bodyStyles = {
+          overflow: 'hidden',
+          pointerEvents: 'none'
+        };
+
+        Object.keys(bodyStyles).forEach(style => {
+          document.body.style[style] = active && !this.disabled ? bodyStyles[style] : '';
+        });
       }
     };
     Polymer(SimpleDrawer)
