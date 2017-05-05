@@ -224,13 +224,14 @@
        * @return {undefined}
        */
       _closeOnBlur(e) {
-        let fromChild = e.relatedTarget && this.contains(e.relatedTarget);
+        let { noBlur, disabled, visible, noChildClicks } = this,
+            fromChild = e.relatedTarget && this.contains(e.relatedTarget);
 
-        if (this.noBlur || this.disabled) {
+        if (noBlur || disabled || !visible) {
           return
         }
 
-        if (this.noChildClicks && fromChild) {
+        if (noChildClicks && fromChild) {
           this.focus();
         } else {
           this.active = false;
